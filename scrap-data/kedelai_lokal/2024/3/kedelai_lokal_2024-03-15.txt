@@ -1,0 +1,38 @@
+Kota Kediri	Rp16.666
+Kabupaten Probolinggo	Rp16.000
+Kota Blitar	Rp16.000
+Kabupaten Magetan	Rp15.666
+Kabupaten Pacitan	Rp15.666
+Kota Surabaya	Rp15.000
+Kabupaten Bojonegoro	Rp15.000
+Kabupaten Kediri	Rp15.000
+Kabupaten Malang	Rp14.800
+Kabupaten Ngawi	Rp14.666
+Kabupaten Lumajang	Rp14.500
+Kota Mojokerto	Rp14.250
+Kabupaten Mojokerto	Rp14.150
+Kota Madiun	Rp14.000
+Kabupaten Lamongan	Rp13.875
+Kabupaten Ponorogo	Rp13.750
+Kabupaten Pamekasan	Rp13.500
+Kabupaten Nganjuk	Rp13.333
+Kabupaten Blitar	Rp13.000
+Kabupaten Tulungagung	Rp13.000
+Kabupaten Jombang	Rp12.833
+Kabupaten Madiun	Rp12.750
+Kabupaten Tuban	Rp12.500
+Kabupaten Pasuruan	Rp12.333
+Kabupaten Situbondo	Rp12.166
+Kabupaten Trenggalek	Rp12.000
+Kabupaten Banyuwangi	Rp11.800
+Kabupaten Gresik	Rp11.500
+Kota Batu	Rp11.250
+Kota Pasuruan	Rp10.500
+Kabupaten Sumenep	Rp8.000
+Kota Malang	Belum ada data
+Kabupaten Jember	Belum ada data
+Kabupaten Bangkalan	Belum ada data
+Kabupaten Bondowoso	Belum ada data
+Kabupaten Sampang	Belum ada data
+Kabupaten Sidoarjo	Belum ada data
+Kota Probolinggo	Belum ada data
