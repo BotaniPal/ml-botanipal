@@ -6,7 +6,17 @@ import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 from PIL import Image
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
+from datetime import datetime
+import firebase_admin
+from firebase_admin import credentials, storage
+import requests
+
+# Initialize Firebase Admin SDK
+cred = credentials.Certificate("serviceAccount.json")
+firebase_admin.initialize_app(cred, {
+    'storageBucket': 'backend-nodejs-tes.appspot.com'
+})
 
 model = keras.models.load_model('plants_type_model.h5')
 
@@ -44,15 +54,26 @@ app = Flask(__name__)
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        file = request.files.get('file')
-        if file is None or file.filename == "":
-            return jsonify({"error": "no file"})
+        file_url = request.json.get('file_url')
+        if not file_url:
+            return jsonify({"error": "no file URL provided"})
 
         try:
-            image_bytes = file.read()
-            tensor = transform_image(io.BytesIO(image_bytes))
+            # Download the image from the provided URL
+            response = requests.get(file_url)
+            if response.status_code != 200:
+                return jsonify({"error": "unable to download image from URL"})
+
+            image_bytes = io.BytesIO(response.content)
+            tensor = transform_image(image_bytes)
             prediction = predict(tensor)
-            data = {"prediction": prediction}
+            timestamp = datetime.now().isoformat()
+
+            data = {
+                "prediction": prediction,
+                "image_url": file_url,
+                "timestamp": timestamp,
+            }
             return jsonify(data)
         except Exception as e:
             return jsonify({"error": str(e)})
