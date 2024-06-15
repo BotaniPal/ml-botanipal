@@ -1,8 +1,8 @@
 import requests
 import time
 
-url = 'https://get-prediction-bd2k3j3bjq-as.a.run.app'
-# url = 'http://localhost:5000'
+# url = 'https://get-prediction-bd2k3j3bjq-as.a.run.app'
+url = 'http://localhost:5000'
 data = {
     "future_date": "2024-06-18",
 }
