@@ -6,10 +6,43 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# Load the model once when the server starts
-model = load_model('bawang_merah_forecasting.h5')
+# Mapping of commodities to their respective model and data file paths
+commodity_files = {
+    'bawang_merah': {
+        'model': 'bawang_merah_forecasting.h5',
+        'data': 'https://raw.githubusercontent.com/BotaniPal/ml-botanipal/main/forecasting/deployment/bawang_merah_mean.csv'
+    },
+    'cabe_rawit_merah': {
+        'model': 'cabe_rawit_merah_forecasting.h5',
+        'data': 'https://raw.githubusercontent.com/BotaniPal/ml-botanipal/main/forecasting/deployment/cabe_rawit_merah_mean.csv'
+    },
+    'jagung': {
+        'model': 'jagung_forecasting.h5',
+        'data': 'https://raw.githubusercontent.com/BotaniPal/ml-botanipal/main/forecasting/deployment/jagung_mean.csv'
+    },
+    'kacang_tanah': {
+        'model': 'kacang_tanah_forecasting.h5',
+        'data': 'https://raw.githubusercontent.com/BotaniPal/ml-botanipal/main/forecasting/deployment/kacang_tanah_mean.csv'
+    },
+    'kedelai': {
+        'model': 'kedelai_forecasting.h5',
+        'data': 'https://raw.githubusercontent.com/BotaniPal/ml-botanipal/main/forecasting/deployment/kedelai_lokal_mean.csv'
+    },
+    'kentang': {
+        'model': 'kentang_forecasting.h5',
+        'data': 'https://raw.githubusercontent.com/BotaniPal/ml-botanipal/main/forecasting/deployment/kentang_mean.csv'
+    },
+    'kol': {
+        'model': 'kol_forecasting.h5',
+        'data': 'https://raw.githubusercontent.com/BotaniPal/ml-botanipal/main/forecasting/deployment/kol_mean.csv'
+    },
+    'tomat': {
+        'model': 'tomat_forecasting.h5',
+        'data': 'https://raw.githubusercontent.com/BotaniPal/ml-botanipal/main/forecasting/deployment/tomat_mean.csv'
+    }
+}
+
 time_step = 10
-file_path = 'https://raw.githubusercontent.com/BotaniPal/ml-botanipal/main/forecasting/deployment/bawang_merah_mean.csv'  # Use the raw file link
 
 def load_and_preprocess_data(file_path):
     try:
@@ -45,35 +78,44 @@ def generate_predictions(model, last_sequence, future_steps, time_step):
 def rescale_prediction(scaler, prediction):
     return scaler.inverse_transform(np.array(prediction).reshape(-1, 1))
 
-@app.route('/', methods=['POST','GET'])
+@app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
         try:
             data = request.get_json()
-            if 'future_date' not in data:
-                return jsonify({'error': "Invalid request data. 'future_date' is required."}), 400
-            
+            if 'future_date' not in data or 'commodity' not in data:
+                return jsonify({'error': "Invalid request data. 'future_date' and 'commodity' are required."}), 400
+
             future_date_str = data['future_date']
+            commodity = data['commodity']
             future_date = pd.to_datetime(future_date_str)
             
-            # Load and preprocess data
-            data = load_and_preprocess_data(file_path)
+            if commodity not in commodity_files:
+                return jsonify({'error': f"Commodity '{commodity}' not found."}), 400
+
+            # Get the model and data file paths for the requested commodity
+            model_file = commodity_files[commodity]['model']
+            data_file = commodity_files[commodity]['data']
             
+            # Load the model and data
+            model = load_model(model_file)
+            data = load_and_preprocess_data(data_file)
+
             # Fit the scaler with the original data
             data, scaler = fit_scaler(data)
-            
+
             # Calculate the number of future steps
             future_steps = get_future_steps(data, future_date)
-            
+
             # Extract the last sequence from the data
             last_sequence = data.values[-time_step:]
-            
+
             # Generate predictions for the specified future steps
             final_prediction = generate_predictions(model, last_sequence, future_steps, time_step)
-            
+
             # Rescale the final prediction back to the original scale
             final_prediction = rescale_prediction(scaler, final_prediction)
-            
+
             # Return the final prediction
             return jsonify({'predicted_price': int(final_prediction[0, 0])})
         except ValueError as ve:
