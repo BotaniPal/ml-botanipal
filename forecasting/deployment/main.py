@@ -9,7 +9,7 @@ app = Flask(__name__)
 # Load the model once when the server starts
 model = load_model('bawang_merah_forecasting.h5')
 time_step = 10
-file_path = 'bawang_merah_mean.csv'  # Declare the file path in the program
+file_path = 'https://github.com/BotaniPal/ml-botanipal/blob/main/forecasting/deployment/bawang_merah_mean.csv'  # Declare the file path in the program
 
 def load_and_preprocess_data(file_path):
     try:
