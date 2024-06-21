@@ -36,7 +36,7 @@ To install the necessary libraries, use the provided `requirements.txt` file.
 ### 1. Preparing Data
 
 1. **Upload Dataset to Google Drive**
-- Link: https://drive.google.com/drive/my-drive
+- Link: https://drive.google.com/file/d/1-8T5RbVZ6jVtRNVUV016JOR3PD5V0ohn/view?usp=drive_link
 
 
 2. **Mount Google Drive in Your Notebook**
